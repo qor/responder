@@ -16,6 +16,7 @@ func init() {
 	for mimeType, format := range map[string]string{
 		"text/html":        "html",
 		"application/json": "json",
+		"application/xml":  "xml",
 	} {
 		Register(mimeType, format)
 	}
@@ -26,9 +27,9 @@ type Responder struct {
 }
 
 // With support string or []string as formats, With("html", func() {
-//   writer.Write([]byte("html"))
+//   writer.Write([]byte("this is a html request"))
 // }).With([]string{"json", "xml"}, func() {
-//   writer.Write([]byte("json or xml"))
+//   writer.Write([]byte("this is a json or xml request"))
 // })
 func With(format interface{}, fc func()) *Responder {
 	rep := &Responder{responds: map[string]func(){}}
