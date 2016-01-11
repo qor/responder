@@ -23,3 +23,7 @@ func(writer http.ResponseWriter, request *http.Request) {
   // if failed to responsible mime type, will use the first one
 })
 ```
+
+## License
+
+Released under the [MIT License](http://opensource.org/licenses/MIT).
