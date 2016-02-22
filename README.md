@@ -11,16 +11,15 @@ import "github.com/qor/responder"
 responder.Register("text/html", "html")
 responder.Register("application/json", "json")
 responder.Register("application/xml", "xml")
-// responder already registered those three mime types, you could use the API to register new mime types
+// `responder` has registered above three mime types, you could register more types with the API
 
-func(writer http.ResponseWriter, request *http.Request) {
-
+func (writer http.ResponseWriter, request *http.Request) {
   responder.With("html", func() {
     writer.Write([]byte("this is a html request"))
   }).With([]string{"json", "xml"}, func() {
     writer.Write([]byte("this is a json or xml request"))
   })Respond(request)
-  // if failed to responsible mime type, will use the first one
+  // if failed to find responsible mime type, will use the first one
 })
 ```
 

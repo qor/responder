@@ -6,8 +6,10 @@ import (
 	"strings"
 )
 
+// MimeTypes registered mime types
 var MimeTypes = map[string]string{}
 
+// Register new mime type and format
 func Register(mime string, format string) {
 	MimeTypes[mime] = format
 }
@@ -47,6 +49,7 @@ func (rep *Responder) With(format interface{}, fc func()) *Responder {
 	return rep
 }
 
+// Respond differently according to request's accepted mime type
 func (rep *Responder) Respond(request *http.Request) {
 	// get request format from url
 	if ext := filepath.Ext(request.URL.Path); ext != "" {
