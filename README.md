@@ -2,6 +2,8 @@
 
 Respond differently according to request's accepted mime type
 
+[![GoDoc](https://godoc.org/github.com/qor/responder?status.svg)](https://godoc.org/github.com/qor/responder)
+
 ## Usage
 
 ```go
@@ -13,7 +15,7 @@ responder.Register("application/json", "json")
 responder.Register("application/xml", "xml")
 // `responder` has registered above three mime types, you could register more types with the API
 
-func (writer http.ResponseWriter, request *http.Request) {
+func handler(writer http.ResponseWriter, request *http.Request) {
   responder.With("html", func() {
     writer.Write([]byte("this is a html request"))
   }).With([]string{"json", "xml"}, func() {

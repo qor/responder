@@ -1,3 +1,6 @@
+// Package responder respond differently according to request's accepted mime type
+//
+// Github: http://github.com/qor/responder
 package responder
 
 import (
@@ -6,12 +9,13 @@ import (
 	"strings"
 )
 
-// MimeTypes registered mime types
-var MimeTypes = map[string]string{}
+// registered mime types
+var mimeTypes = map[string]string{}
 
 // Register new mime type and format
+//     responder.Register("application/json", "json")
 func Register(mime string, format string) {
-	MimeTypes[mime] = format
+	mimeTypes[mime] = format
 }
 
 func init() {
@@ -24,24 +28,27 @@ func init() {
 	}
 }
 
+// Responder is holder of registed response handlers, response `Request` based on its accepted mime type
 type Responder struct {
 	responds map[string]func()
 }
 
-// With support string or []string as formats, With("html", func() {
-//   writer.Write([]byte("this is a html request"))
-// }).With([]string{"json", "xml"}, func() {
-//   writer.Write([]byte("this is a json or xml request"))
-// })
-func With(format interface{}, fc func()) *Responder {
+// With could be used to register response handler for mime type formats, the formats could be string or []string
+//     responder.With("html", func() {
+//       writer.Write([]byte("this is a html request"))
+//     }).With([]string{"json", "xml"}, func() {
+//       writer.Write([]byte("this is a json or xml request"))
+//     })
+func With(formats interface{}, fc func()) *Responder {
 	rep := &Responder{responds: map[string]func(){}}
-	return rep.With(format, fc)
+	return rep.With(formats, fc)
 }
 
-func (rep *Responder) With(format interface{}, fc func()) *Responder {
-	if f, ok := format.(string); ok {
+// With could be used to register response handler for mime type formats, the formats could be string or []string
+func (rep *Responder) With(formats interface{}, fc func()) *Responder {
+	if f, ok := formats.(string); ok {
 		rep.responds[f] = fc
-	} else if fs, ok := format.([]string); ok {
+	} else if fs, ok := formats.([]string); ok {
 		for _, f := range fs {
 			rep.responds[f] = fc
 		}
@@ -61,7 +68,7 @@ func (rep *Responder) Respond(request *http.Request) {
 
 	// get request format from Accept
 	for _, accept := range strings.Split(request.Header.Get("Accept"), ",") {
-		if format, ok := MimeTypes[accept]; ok {
+		if format, ok := mimeTypes[accept]; ok {
 			if respond, ok := rep.responds[format]; ok {
 				respond()
 				return
