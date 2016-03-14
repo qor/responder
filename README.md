@@ -1,6 +1,6 @@
 # Responder
 
-Respond differently according to request's accepted mime type
+Responder provides a means to respond differently according to a request's accepted mime type.
 
 [![GoDoc](https://godoc.org/github.com/qor/responder?status.svg)](https://godoc.org/github.com/qor/responder)
 
