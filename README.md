@@ -20,7 +20,7 @@ func handler(writer http.ResponseWriter, request *http.Request) {
     writer.Write([]byte("this is a html request"))
   }).With([]string{"json", "xml"}, func() {
     writer.Write([]byte("this is a json or xml request"))
-  })Respond(request)
+  }).Respond(request)
   // if failed to find responsible mime type, will use the first one
 })
 ```
