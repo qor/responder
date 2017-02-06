@@ -4,18 +4,16 @@
 package responder
 
 import (
+	"mime"
 	"net/http"
 	"path/filepath"
 	"strings"
 )
 
-// registered mime types
-var mimeTypes = map[string]string{}
-
-// Register new mime type and format
+// Register mime type and format
 //     responder.Register("application/json", "json")
-func Register(mime string, format string) {
-	mimeTypes[mime] = format
+func Register(mimeType string, format string) {
+	mime.AddExtensionType(format, mimeType)
 }
 
 func init() {
@@ -68,10 +66,12 @@ func (rep *Responder) Respond(request *http.Request) {
 
 	// get request format from Accept
 	for _, accept := range strings.Split(request.Header.Get("Accept"), ",") {
-		if format, ok := mimeTypes[accept]; ok {
-			if respond, ok := rep.responds[format]; ok {
-				respond()
-				return
+		if exts, err := mime.ExtensionsByType(accept); err == nil {
+			for _, ext := range exts {
+				if respond, ok := rep.responds[strings.TrimPrefix(ext, ".")]; ok {
+					respond()
+					return
+				}
 			}
 		}
 	}
