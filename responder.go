@@ -13,7 +13,7 @@ import (
 // Register mime type and format
 //     responder.Register("application/json", "json")
 func Register(mimeType string, format string) {
-	mime.AddExtensionType(format, mimeType)
+	mime.AddExtensionType("."+strings.TrimPrefix(format, "."), mimeType)
 }
 
 func init() {
