@@ -28,7 +28,8 @@ func init() {
 
 // Responder is holder of registed response handlers, response `Request` based on its accepted mime type
 type Responder struct {
-	responds map[string]func()
+	responds         map[string]func()
+	DefaultResponder func()
 }
 
 // With could be used to register response handler for mime type formats, the formats could be string or []string
@@ -50,6 +51,10 @@ func (rep *Responder) With(formats interface{}, fc func()) *Responder {
 		for _, f := range fs {
 			rep.responds[f] = fc
 		}
+	}
+
+	if rep.DefaultResponder == nil {
+		rep.DefaultResponder = fc
 	}
 	return rep
 }
@@ -77,9 +82,8 @@ func (rep *Responder) Respond(request *http.Request) {
 	}
 
 	// use first format as default
-	for _, respond := range rep.responds {
-		respond()
-		break
+	if rep.DefaultResponder != nil {
+		rep.DefaultResponder()
 	}
 	return
 }
