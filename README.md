@@ -3,6 +3,7 @@
 Responder provides a means to respond differently according to a request's accepted mime type.
 
 [![GoDoc](https://godoc.org/github.com/qor/responder?status.svg)](https://godoc.org/github.com/qor/responder)
+[![Build Status](https://travis-ci.com/qor/responder.svg?branch=master)](https://travis-ci.com/qor/responder)
 
 ## Usage
 
